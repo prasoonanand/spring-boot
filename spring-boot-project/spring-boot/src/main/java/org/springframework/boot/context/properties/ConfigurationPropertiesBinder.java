@@ -256,22 +256,22 @@ class ConfigurationPropertiesBinder {
 			return target != null && (hasConfigurationProperty(target) || isNestedClassOfConfigurationProperty(target));
 		}
 
-		private boolean hasConfigurationProperty(final Class<?> target){
+		private boolean hasConfigurationProperty(final Class<?> target) {
 			return MergedAnnotations.from(target).isPresent(ConfigurationProperties.class);
 		}
 
 		/**
 		 * Iterates over the nested classes till top level class is found or a class with
 		 * {@link ConfigurationProperties} is found.
-		 *
-		 * @param target
-		 * @return {@link Boolean TRUE} When {@link ConfigurationProperties} annotaion is found.
-		 *	{@link Boolean FALSE} When {@link ConfigurationProperties} annotaion is not found.
+		 * @param target the nested class
+		 * @return
+		 * {@link Boolean TRUE} When {@link ConfigurationProperties} annotation is found.
+		 * {@link Boolean FALSE} When {@link ConfigurationProperties} annotation is not found.
 		 */
-		private boolean isNestedClassOfConfigurationProperty(final Class<?> target){
+		private boolean isNestedClassOfConfigurationProperty(final Class<?> target) {
 			Class<?> enclosingClass = target.getEnclosingClass();
-			while(enclosingClass != null){
-				if(hasConfigurationProperty(enclosingClass)){
+			while (enclosingClass != null) {
+				if (hasConfigurationProperty(enclosingClass)) {
 					return Boolean.TRUE;
 				}
 				enclosingClass = enclosingClass.getEnclosingClass();

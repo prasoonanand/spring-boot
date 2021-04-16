@@ -28,6 +28,7 @@ package org.springframework.boot.context.properties;
 public class WithPublicStringConstructorProperties {
 
 	private String a;
+
 	private Bar bar;
 
 	public WithPublicStringConstructorProperties() {
@@ -46,19 +47,43 @@ public class WithPublicStringConstructorProperties {
 	}
 
 	public Bar getBar() {
-		return bar;
+		return this.bar;
 	}
 
 	public void setBar(Bar bar) {
 		this.bar = bar;
 	}
 
-	static class Bar {
+	public static class Bar {
 
 		private String baz;
+
 		private Foo foo;
 
-		static class Foo {
+		public Bar() {
+		}
+
+		public Bar(String baz) {
+			this.baz = baz;
+		}
+
+		public String getBaz() {
+			return this.baz;
+		}
+
+		public void setBaz(String baz) {
+			this.baz = baz;
+		}
+
+		public Foo getFoo() {
+			return this.foo;
+		}
+
+		public void setFoo(Foo foo) {
+			this.foo = foo;
+		}
+
+		public static class Foo {
 
 			private String a;
 
@@ -70,7 +95,7 @@ public class WithPublicStringConstructorProperties {
 			}
 
 			public String getA() {
-				return a;
+				return this.a;
 			}
 
 			public void setA(String a) {
@@ -78,27 +103,5 @@ public class WithPublicStringConstructorProperties {
 			}
 		}
 
-		public Bar() {
-		}
-
-		public Bar(String baz) {
-			this.baz = baz;
-		}
-
-		public String getBaz() {
-			return baz;
-		}
-
-		public void setBaz(String baz) {
-			this.baz = baz;
-		}
-
-		public Foo getFoo() {
-			return foo;
-		}
-
-		public void setFoo(Foo foo) {
-			this.foo = foo;
-		}
 	}
 }
