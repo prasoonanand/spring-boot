@@ -113,7 +113,7 @@ class ConfigurationPropertiesBinder {
 	private <T> BindHandler getBindHandler(Bindable<T> target, ConfigurationProperties annotation) {
 		List<Validator> validators = getValidators(target);
 		BindHandler handler = getHandler();
-		handler = new ConfigurationPropertiesBindHander(handler);
+		handler = new ConfigurationPropertiesBindHandler(handler);
 		if (annotation.ignoreInvalidFields()) {
 			handler = new IgnoreErrorsBindHandler(handler);
 		}
@@ -240,9 +240,9 @@ class ConfigurationPropertiesBinder {
 	 * {@link BindHandler} to deal with
 	 * {@link ConfigurationProperties @ConfigurationProperties} concerns.
 	 */
-	private static class ConfigurationPropertiesBindHander extends AbstractBindHandler {
+	private static class ConfigurationPropertiesBindHandler extends AbstractBindHandler {
 
-		ConfigurationPropertiesBindHander(BindHandler handler) {
+		ConfigurationPropertiesBindHandler(BindHandler handler) {
 			super(handler);
 		}
 
@@ -252,8 +252,23 @@ class ConfigurationPropertiesBinder {
 					? target.withBindRestrictions(BindRestriction.NO_DIRECT_PROPERTY) : target;
 		}
 
-		private boolean isConfigurationProperties(Class<?> target) {
-			return target != null && MergedAnnotations.from(target).isPresent(ConfigurationProperties.class);
+		private boolean isConfigurationProperties(final Class<?> target) {
+			return target != null && (hasConfigurationProperty(target) || isNestedClassOfConfigurationProperty(target));
+		}
+
+		private boolean hasConfigurationProperty(final Class<?> target){
+			return MergedAnnotations.from(target).isPresent(ConfigurationProperties.class);
+		}
+
+		private boolean isNestedClassOfConfigurationProperty(final Class<?> target){
+			Class<?> enclosingClass = target.getEnclosingClass();
+			while(enclosingClass != null){
+				if(hasConfigurationProperty(enclosingClass)){
+					return Boolean.TRUE;
+				}
+				enclosingClass = enclosingClass.getEnclosingClass();
+			}
+			return Boolean.FALSE;
 		}
 
 	}
